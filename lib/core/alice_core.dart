@@ -6,7 +6,6 @@ import 'package:alice/model/alice_http_error.dart';
 import 'package:alice/model/alice_http_call.dart';
 import 'package:alice/model/alice_http_response.dart';
 import 'package:alice/ui/page/alice_calls_list_screen.dart';
-import 'package:alice/utils/shake_detector.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -45,7 +44,6 @@ class AliceCore {
   GlobalKey<NavigatorState>? navigatorKey;
   Brightness _brightness = Brightness.light;
   bool _isInspectorOpened = false;
-  ShakeDetector? _shakeDetector;
   StreamSubscription? _callsSubscription;
   String? _notificationMessage;
   String? _notificationMessageShown;
@@ -66,21 +64,13 @@ class AliceCore {
       _initializeNotificationsPlugin();
       _callsSubscription = callsSubject.listen((_) => _onCallsChanged());
     }
-    if (showInspectorOnShake) {
-      _shakeDetector = ShakeDetector.autoStart(
-        onPhoneShake: () {
-          navigateToCallListScreen();
-        },
-        shakeThresholdGravity: 5,
-      );
-    }
+    if (showInspectorOnShake) {}
     _brightness = darkTheme ? Brightness.dark : Brightness.light;
   }
 
   /// Dispose subjects and subscriptions
   void dispose() {
     callsSubject.close();
-    _shakeDetector?.stopListening();
     _callsSubscription?.cancel();
   }
 
